@@ -1,6 +1,8 @@
 # VMath
 My own lighter, more intuitive glm.
 
+namespace vmath
+
 These headers consist of defenitions of templated 2D, 3D and 4D vectors as well as a 4x4 matrix. They are made to be easily used along with Vulkan, hence the name VMath.
 
 Vector functionality:
