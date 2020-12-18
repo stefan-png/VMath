@@ -36,4 +36,7 @@ according to [this naming convention](https://www.sebastiansylvan.com/post/matri
 Things to add:
   * model rotation and scale in modelToWorld()
   * worldToViewMatrix using axis-angle camera instead of yaw/pitch camera
-  * 
+  * vec4 colors! 
+    * RGBA, HLSL, HSV conversion
+    * mix(colourA, colourB, amount)
+

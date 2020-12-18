@@ -1,13 +1,13 @@
 FLAGS = -std=c++17
 EXECNAME = VectorTest
 
-$(EXECNAME): main.cpp
-	g++ main.cpp -o $(EXECNAME) $(FLAGS)
+bin/$(EXECNAME): test/main.cpp
+	g++ test/main.cpp -o bin/$(EXECNAME) $(FLAGS)
 
 
 .PHONY: test clean
-test: $(EXECNAME)
-	./$(EXECNAME)
+test: bin/$(EXECNAME)
+	bin/$(EXECNAME)
 
 clean:
-	rm $(EXECNAME)
+	rm bin/$(EXECNAME)

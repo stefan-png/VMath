@@ -1,21 +1,19 @@
-//
-//  vmath.h
-//  VulkanBP
-//
-//  Created by Stefan Antoszko on 2020-04-05.
-//  Copyright © 2020 Stefan Antoszko. All rights reserved.
-//
+//  Vector.hpp
+
 #pragma once
 #include <iostream>
 #include <cmath>
+#include <type_traits>  //for std::is_fundamental
 
 namespace vmath {
 
 //declarations
 template<typename T>
 struct _vec2;
+
 template<typename T>
 struct _vec3;
+
 template<typename T>
 struct _vec4;
 
@@ -54,6 +52,12 @@ template<typename U>
 _vec3<U> rotate(const _vec3<U> vector, const _vec3<U>& axis, float angle);
 template<typename U>
 _vec3<U> rotate(const _vec3<U> vector, const _vec4<U>& axisAngle);
+template<typename U>
+_vec2<U> normalize(const _vec2<U>& vec);
+template<typename U>
+_vec3<U> normalize(const _vec3<U>& vec);
+template<typename U>
+_vec4<U> normalize(const _vec4<U>& vec);
 
 //definitions
 template<typename T>
@@ -72,7 +76,7 @@ struct _vec2 {
     }
 
     //component access
-    T operator[](uint32_t i) {
+    T& operator[](uint32_t i) {
         switch(i) {
             default:
                 return x;
@@ -82,177 +86,169 @@ struct _vec2 {
     }
 
     //arithmetic
-    template<typename U>
-    _vec2<T> operator+=(const _vec2<U>& other) {
+    _vec2<T> operator+=(const _vec2<T>& other) {
         this->x += other.x;
         this->y += other.y;
         return *this;
     }
-    template<typename U>
-    _vec2<T> operator+=(U scalar) {
+
+    _vec2<T> operator+=(T scalar) {
         this->x += scalar;
         this->y += scalar;
         return *this;
     }
 
-    template<typename U>
-    _vec2<T> operator-=(const _vec2<U>& other) {
+
+    _vec2<T> operator-=(const _vec2<T>& other) {
         this->x -= other.x;
         this->y -= other.y;
         return *this;
     }
-    template<typename U>
-    _vec2<T> operator-=(U scalar) {
+
+    _vec2<T> operator-=(T scalar) {
         this->x -= scalar;
         this->y -= scalar;
         return *this;
     }
 
-    template<typename U>
-    _vec2<T> operator*=(const _vec2<U>& other) {
+
+    _vec2<T> operator*=(const _vec2<T>& other) {
         this->x *= other.x;
         this->y *= other.y;
         return *this;
     }
-    template<typename U>
-    _vec2<T> operator*=(U scalar) {
+
+    _vec2<T> operator*=(T scalar) {
         this->x *= scalar;
         this->y *= scalar;
         return *this;
     }
 
-    template<typename U>
-    _vec2<T> operator/=(const _vec2<U>& other) {
+
+    _vec2<T> operator/=(const _vec2<T>& other) {
         this->x /= other.x;
         this->y /= other.y;
         return *this;
     }
-    template<typename U>
-    _vec2<T> operator/=(U scalar) {
+
+    _vec2<T> operator/=(T scalar) {
         this->x /= scalar;
         this->y /= scalar;
         return *this;
     }
 
-    template<typename U>
+
     _vec2<T> operator++() {
         ++this->x;  //return value after it is incremented
         ++this->y;
         return *this;
     }
-    template<typename U>
+
     _vec2<T> operator++(int i) {
         _vec2<T> temp = *this;  //save this as a return value
         ++*this;                //increment this
         return *this;           //return saved value (old)
     }
 
-    template<typename U>
+
     _vec2<T> operator--() {
         --this->x;  //return value after it is decremented
         --this->y;
         return *this;
     }
-    template<typename U>
+
     _vec2<T> operator--(int i) {
         _vec2<T> temp = *this;  //save this as a return value
         --*this;                //decremented this
         return *this;           //return saved value (old)
     }
 
-   template<typename U>
-    _vec3<T> operator+(const _vec3<U>& other) {
-        return _vec3<T> (*this) += other;
+
+    _vec2<T> operator+(const _vec2<T>& other) {
+        return _vec2<T> (*this) += other;
     }
-    template<typename U>
-    _vec3<T> operator+(U scalar) {
-        return _vec3<T> (*this) += scalar;
+
+    _vec2<T> operator+(T scalar) {
+        return _vec2<T> (*this) += scalar;
     }
-    template<typename U>
-    _vec3<T> operator+(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+
+    _vec2<T> operator+(const _vec2<T>& other) const{
+        _vec2<T> out (*this);
         return out += other;
     }
-    template<typename U>
-    _vec3<T> operator+(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+
+    _vec2<T> operator+(T scalar) const{
+        _vec2<T> out (*this);
         return out += scalar;
     }
 
-    template<typename U>
-    _vec3<T> operator-(const _vec3<U>& other) {
-        return _vec3<T> (*this) -= other;
+
+    _vec2<T> operator-(const _vec2<T>& other) {
+        return _vec2<T> (*this) -= other;
     }
-    template<typename U>
-    _vec3<T> operator-(U scalar) {
-        return _vec3<T> (*this) -= scalar;
+
+    _vec2<T> operator-(T scalar) {
+        return _vec2<T> (*this) -= scalar;
     }
-    template<typename U>
-    _vec3<T> operator-(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+
+    _vec2<T> operator-(const _vec2<T>& other) const{
+        _vec2<T> out (*this);
         return out -= other;
     }
-    template<typename U>
-    _vec3<T> operator-(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+
+    _vec2<T> operator-(T scalar) const{
+        _vec2<T> out (*this);
         return out -= scalar;
     }
     
-    template<typename U>
-    _vec3<T> operator*(const _vec3<U>& other) {
-        return _vec3<T> (*this) *= other;
+
+    _vec2<T> operator*(const _vec2<T>& other) {
+        return _vec2<T> (*this) *= other;
     }
-    template<typename U>
-    _vec3<T> operator*(U scalar) {
-        return _vec3<T> (*this) *= scalar;
+
+    _vec2<T> operator*(T scalar) {
+        return _vec2<T> (*this) *= scalar;
     }
-    template<typename U>
-    _vec3<T> operator*(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+
+    _vec2<T> operator*(const _vec2<T>& other) const{
+        _vec2<T> out (*this);
         return out *= other;
     }
-    template<typename U>
-    _vec3<T> operator*(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+
+    _vec2<T> operator*(T scalar) const{
+        _vec2<T> out (*this);
         return out *= scalar;
     }
 
-    template<typename U>
-    _vec3<T> operator/(const _vec3<U>& other) {
-        return _vec3<T> (*this) /= other;
+
+    _vec2<T> operator/(const _vec2<T>& other) {
+        return _vec2<T> (*this) /= other;
     }
-    template<typename U>
-    _vec3<T> operator/(U scalar) {
-        return _vec3<T> (*this) /= scalar;
+
+    _vec2<T> operator/(T scalar) {
+        return _vec2<T> (*this) /= scalar;
     }
-    template<typename U>
-    _vec3<T> operator/(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+
+    _vec2<T> operator/(const _vec2<T>& other) const{
+        _vec2<T> out (*this);
         return out /= other;
     }
-    template<typename U>
-    _vec3<T> operator/(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+
+    _vec2<T> operator/(T scalar) const{
+        _vec2<T> out (*this);
         return out /= scalar;
     }
 
     //      _vec2 defines
-    template<typename U>
     float length() const{ 
         return sqrt(x*x + y*y); 
     }
-    template<typename U>
-    _vec2<U> normalize() const{ 
-        return *this / length(); 
-    }
 
-    template<typename U>
-    float distance(const _vec2<U>& other) const{
+    float distance(const _vec2<T>& other) const{
         return length(*this - other);
     }
 
-    template<typename U>
-    float dot(const _vec2<U>& other) const{ 
+    float dot(const _vec2<T>& other) const{ 
         return (x * other.x) + (y * other.y);
 }
     //members
@@ -275,7 +271,7 @@ struct _vec3 {
     }
 
     //component access
-    T operator[](uint32_t i) {
+    T& operator[](uint32_t i) {
         switch(i) {
             default:
                 return x;
@@ -287,167 +283,141 @@ struct _vec3 {
     }
 	
     //arithmetic
-    template<typename U>
-    _vec3<T> operator+=(const _vec3<U>& other) {
+    _vec3<T> operator+=(const _vec3<T>& other) {
         this->x += other.x;
         this->y += other.y;
 		this->z += other.z;
         return *this;
     }
-    template<typename U>
-    _vec3<T> operator+=(U scalar) {
+    _vec3<T> operator+=(T scalar) {
         this->x += scalar;
         this->y += scalar;
 		this->z += scalar;
         return *this;
     }
 
-    template<typename U>
-    _vec3<T> operator-=(const _vec3<U>& other) {
+    _vec3<T> operator-=(const _vec3<T>& other) {
         this->x -= other.x;
         this->y -= other.y;
 		this->z -= other.z;
         return *this;
     }
-    template<typename U>
-    _vec3<T> operator-=(U scalar) {
+    _vec3<T> operator-=(T scalar) {
         this->x -= scalar;
         this->y -= scalar;
 		this->z -= scalar;
         return *this;
     }
 
-    template<typename U>
-    _vec3<T> operator*=(const _vec3<U>& other) {
+    _vec3<T> operator*=(const _vec3<T>& other) {
         this->x *= other.x;
         this->y *= other.y;
 		this->z *= other.z;
         return *this;
     }
-    template<typename U>
-    _vec3<T> operator*=(U scalar) {
+    
+    _vec3<T> operator*=(T scalar) {
+        std::cout << "is fundamental: "<<std::is_fundamental<T>::value << std::endl;
         this->x *= scalar;
         this->y *= scalar;
 		this->z *= scalar;
         return *this;
     }
 
-    template<typename U>
-    _vec3<T> operator/=(const _vec3<U>& other) {
+    _vec3<T> operator/=(const _vec3<T>& other) {
         this->x /= other.x;
         this->y /= other.y;
 		this->z /= other.z;
         return *this;
     }
-    template<typename U>
-    _vec3<T> operator/=(U scalar) {
+    _vec3<T> operator/=(T scalar) {
         this->x /= scalar;
         this->y /= scalar;
 		this->z /= scalar;
         return *this;
     }
 
-    template<typename U>
     _vec3<T> operator++() {
         ++this->x;  //return value after it is incremented
         ++this->y;
 		++this->z;
         return *this;
     }
-    template<typename U>
     _vec3<T> operator++(int i) {
         _vec3<T> temp = *this;  //save this as a return value
         ++*this;                //increment this
         return *this;           //return saved value (old)
     }
 
-    template<typename U>
     _vec3<T> operator--() {
         --this->x;  //return value after it is decremented
         --this->y;
 		--this->z;
         return *this;
     }
-    template<typename U>
     _vec3<T> operator--(int i) {
         _vec3<T> temp = *this;  //save this as a return value
         --*this;                //decremented this
         return *this;           //return saved value (old)
     }
 
-    template<typename U>
-    _vec3<T> operator+(const _vec3<U>& other) {
+    _vec3<T> operator+(const _vec3<T>& other) {
         return _vec3<T> (*this) += other;
     }
-    template<typename U>
-    _vec3<T> operator+(U scalar) {
+    _vec3<T> operator+(T scalar) {
         return _vec3<T> (*this) += scalar;
     }
-    template<typename U>
-    _vec3<T> operator+(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec3<T> operator+(const _vec3<T>& other) const{
+        _vec3<T> out (*this);
         return out += other;
     }
-    template<typename U>
-    _vec3<T> operator+(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec3<T> operator+(T scalar) const{
+        _vec3<T> out (*this);
         return out += scalar;
     }
 
-    template<typename U>
-    _vec3<T> operator-(const _vec3<U>& other) {
+    _vec3<T> operator-(const _vec3<T>& other) {
         return _vec3<T> (*this) -= other;
     }
-    template<typename U>
-    _vec3<T> operator-(U scalar) {
+    _vec3<T> operator-(T scalar) {
         return _vec3<T> (*this) -= scalar;
     }
-    template<typename U>
-    _vec3<T> operator-(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec3<T> operator-(const _vec3<T>& other) const{
+        _vec3<T> out (*this);
         return out -= other;
     }
-    template<typename U>
-    _vec3<T> operator-(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec3<T> operator-(T scalar) const{
+        _vec3<T> out (*this);
         return out -= scalar;
     }
     
-    template<typename U>
-    _vec3<T> operator*(const _vec3<U>& other) {
+    _vec3<T> operator*(const _vec3<T>& other) {
         return _vec3<T> (*this) *= other;
     }
-    template<typename U>
-    _vec3<T> operator*(U scalar) {
+    _vec3<T> operator*(T scalar) {
         return _vec3<T> (*this) *= scalar;
     }
-    template<typename U>
-    _vec3<T> operator*(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec3<T> operator*(const _vec3<T>& other) const{
+        _vec3<T> out (*this);
         return out *= other;
     }
-    template<typename U>
-    _vec3<T> operator*(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec3<T> operator*(T scalar) const{
+        _vec3<T> out (*this);
         return out *= scalar;
     }
 
-    template<typename U>
-    _vec3<T> operator/(const _vec3<U>& other) {
+    _vec3<T> operator/(const _vec3<T>& other) {
         return _vec3<T> (*this) /= other;
     }
-    template<typename U>
-    _vec3<T> operator/(U scalar) {
+    _vec3<T> operator/(T scalar) {
         return _vec3<T> (*this) /= scalar;
     }
-    template<typename U>
-    _vec3<T> operator/(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec3<T> operator/(const _vec3<T>& other) const{
+        _vec3<T> out (*this);
         return out /= other;
     }
-    template<typename U>
-    _vec3<T> operator/(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec3<T> operator/(T scalar) const{
+        _vec3<T> out (*this);
         return out /= scalar;
     }
 
@@ -455,30 +425,23 @@ struct _vec3 {
     float length() const{ 
         return sqrt(x*x + y*y + z*z); 
     }
-	_vec3<T> normalize() const{ 
-        return *this / length(); 
-    }
-    template<typename U>
-    float distance(const _vec3<U>& other) const{
+
+    float distance(const _vec3<T>& other) const{
         return length(*this - other);
     }
-    template<typename U>
-	float dot(const _vec3<U>& other) const{ 
+	float dot(const _vec3<T>& other) const{ 
         return (x * other.x) + (y * other.y)+ (z * other.z);
     }
-	template<typename U>
-	_vec3<T> cross(const _vec3<U>& other) const{ 
+	_vec3<T> cross(const _vec3<T>& other) const{ 
         return _vec3<T>(this->y*other.z - this->z*other.y,
 						this->z*other.x - this->x*other.z,
 						this->x*other.y - this->y*other.x);
     }
-	template<typename U>
-	void rotate(const _vec3<U>& axis, float angle) {
+	void rotate(const _vec3<T>& axis, float angle) {
 		*this = *this * cos(angle) + axis.cross(*this) * sin(angle) + axis * axis.dot(*this) * (1 - cos(angle));
 	}
 
-	template<typename U>
-	void rotate(const _vec4<U>& axisAngle)  {
+	void rotate(const _vec4<T>& axisAngle)  {
 	    _vec3<T> axis(axisAngle.x, axisAngle.y, axisAngle.z);
 	    *this = *this * cos(axisAngle.w) + axis.dot(*this) * sin(axisAngle.w) + axis * axis.dot(*this) * (1 - cos(axisAngle.w));
     }
@@ -503,7 +466,7 @@ struct _vec4 {
     }
 
     //component access
-    T operator[](uint32_t i) {
+    T& operator[](uint32_t i) {
         switch(i) {
             default:
                 return x;
@@ -517,16 +480,14 @@ struct _vec4 {
     }
 	
     //arithmetic
-    template<typename U>
-    _vec4<T> operator+=(const _vec4<U>& other) {
+    _vec4<T> operator+=(const _vec4<T>& other) {
         this->x += other.x;
         this->y += other.y;
 		this->z += other.z;
 		this->w += other.w;
         return *this;
     }
-    template<typename U>
-    _vec4<T> operator+=(U scalar) {
+    _vec4<T> operator+=(T scalar) {
         this->x += scalar;
         this->y += scalar;
 		this->z += scalar;
@@ -534,16 +495,14 @@ struct _vec4 {
         return *this;
     }
 
-    template<typename U>
-    _vec4<T> operator-=(const _vec4<U>& other) {
+    _vec4<T> operator-=(const _vec4<T>& other) {
         this->x -= other.x;
         this->y -= other.y;
 		this->z -= other.z;
 		this->w -= other.w;
         return *this;
     }
-    template<typename U>
-    _vec4<T> operator-=(U scalar) {
+    _vec4<T> operator-=(T scalar) {
         this->x -= scalar;
         this->y -= scalar;
 		this->z -= scalar;
@@ -551,16 +510,14 @@ struct _vec4 {
         return *this;
     }
 
-    template<typename U>
-    _vec4<T> operator*=(const _vec4<U>& other) {
+    _vec4<T> operator*=(const _vec4<T>& other) {
         this->x *= other.x;
         this->y *= other.y;
 		this->z *= other.z;
 		this->w *= other.w;
         return *this;
     }
-    template<typename U>
-    _vec4<T> operator*=(U scalar) {
+    _vec4<T> operator*=(T scalar) {
         this->x *= scalar;
         this->y *= scalar;
 		this->z *= scalar;
@@ -568,16 +525,14 @@ struct _vec4 {
         return *this;
     }
 
-    template<typename U>
-    _vec4<T> operator/=(const _vec4<U>& other) {
+    _vec4<T> operator/=(const _vec4<T>& other) {
         this->x /= other.x;
         this->y /= other.y;
 		this->z /= other.z;
 		this->w /= other.w;
         return *this;
     }
-    template<typename U>
-    _vec4<T> operator/=(U scalar) {
+    _vec4<T> operator/=(T scalar) {
         this->x /= scalar;
         this->y /= scalar;
 		this->z /= scalar;
@@ -585,7 +540,6 @@ struct _vec4 {
         return *this;
     }
 
-    template<typename U>
     _vec4<T> operator++() {
         ++this->x;  //return value after it is incremented
         ++this->y;
@@ -593,14 +547,12 @@ struct _vec4 {
 		++this->w;
         return *this;
     }
-    template<typename U>
     _vec4<T> operator++(int i) {
         _vec4<T> temp = *this;  //save this as a return value
         ++*this;                //increment this
         return *this;           //return saved value (old)
     }
 
-    template<typename U>
     _vec4<T> operator--() {
         --this->x;  //return value after it is decremented
         --this->y;
@@ -608,86 +560,69 @@ struct _vec4 {
 		--this->w;
         return *this;
     }
-    template<typename U>
     _vec4<T> operator--(int i) {
         _vec4<T> temp = *this;  //save this as a return value
         --*this;                //decremented this
         return *this;           //return saved value (old)
     }
 
-    template<typename U>
-    _vec3<T> operator+(const _vec3<U>& other) {
-        return _vec3<T> (*this) += other;
+    _vec4<T> operator+(const _vec4<T>& other) {
+        return _vec4<T> (*this) += other;
     }
-    template<typename U>
-    _vec3<T> operator+(U scalar) {
-        return _vec3<T> (*this) += scalar;
+    _vec4<T> operator+(T scalar) {
+        return _vec4<T> (*this) += scalar;
     }
-    template<typename U>
-    _vec3<T> operator+(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec4<T> operator+(const _vec4<T>& other) const{
+        _vec4<T> out (*this);
         return out += other;
     }
-    template<typename U>
-    _vec3<T> operator+(U scalar) const {
-        _vec3<T> out = _vec3<T> (*this);
+    _vec4<T> operator+(T scalar) const {
+        _vec4<T> out (*this);
         return out += scalar;
     }
 
-    template<typename U>
-    _vec3<T> operator-(const _vec3<U>& other) {
-        return _vec3<T> (*this) -= other;
+    _vec4<T> operator-(const _vec4<T>& other) {
+        return _vec4<T> (*this) -= other;
     }
-    template<typename U>
-    _vec3<T> operator-(U scalar) {
-        return _vec3<T> (*this) -= scalar;
+    _vec4<T> operator-(T scalar) {
+        return _vec4<T> (*this) -= scalar;
     }
-    template<typename U>
-    _vec3<T> operator-(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec4<T> operator-(const _vec4<T>& other) const{
+        _vec4<T> out (*this);
         return out -= other;
     }
-    template<typename U>
-    _vec3<T> operator-(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec4<T> operator-(T scalar) const{
+        _vec4<T> out (*this);
         return out -= scalar;
     }
     
-    template<typename U>
-    _vec3<T> operator*(const _vec3<U>& other) {
-        return _vec3<T> (*this) *= other;
+    _vec4<T> operator*(const _vec4<T>& other) {
+        return _vec4<T> (*this) *= other;
     }
-    template<typename U>
-    _vec3<T> operator*(U scalar) {
-        return _vec3<T> (*this) *= scalar;
+    _vec4<T> operator*(T scalar) {
+        return _vec4<T> (*this) *= scalar;
     }
-    template<typename U>
-    _vec3<T> operator*(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec4<T> operator*(const _vec4<T>& other) const{
+        _vec4<T> out (*this);
         return out *= other;
     }
-    template<typename U>
-    _vec3<T> operator*(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec4<T> operator*(T scalar) const{
+        _vec4<T> out (*this);
         return out *= scalar;
     }
 
-    template<typename U>
-    _vec3<T> operator/(const _vec3<U>& other) {
-        return _vec3<T> (*this) /= other;
+    _vec4<T> operator/(const _vec4<T>& other) {
+        return _vec4<T> (*this) /= other;
     }
-    template<typename U>
-    _vec3<T> operator/(U scalar) {
-        return _vec3<T> (*this) /= scalar;
+    _vec4<T> operator/(T scalar) {
+        return _vec4<T> (*this) /= scalar;
     }
-    template<typename U>
-    _vec3<T> operator/(const _vec3<U>& other) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec4<T> operator/(const _vec4<T>& other) const{
+        _vec4<T> out (*this);
         return out /= other;
     }
-    template<typename U>
-    _vec3<T> operator/(U scalar) const{
-        _vec3<T> out = _vec3<T> (*this);
+    _vec4<T> operator/(T scalar) const{
+        _vec4<T> out (*this);
         return out /= scalar;
     }
 
@@ -696,71 +631,156 @@ struct _vec4 {
         return sqrt(x*x + y*y + z*z + w*w); 
     }
 
-	_vec4 normalize() { 
-        return *this / length(); 
-    }
-
-    template<typename U>
-    float distance(const _vec4<U>& other) {
+    float distance(const _vec4<T>& other) {
         return length(*this - other);
     }
 
-    template<typename U>
-	float dot(const _vec4<U>& other) { 
+	float dot(const _vec4<T>& other) { 
         return (x * other.x) + (y * other.y) + (z * other.z) + (w * other.w);
     }
     //members
     T x, y, z, w;
 };  //_vec4
 
+//templated primitive arithmetic
+template<typename T>
+_vec2<T> operator+(T scalar, const _vec2<T>& vec) {
+    return _vec2<T>(scalar + vec.x,
+                    scalar + vec.y );
+}
+template<typename T>
+_vec2<T> operator-(T scalar, const _vec2<T>& vec) {
+    return _vec2<T>(scalar - vec.x,
+                    scalar - vec.y );
+}
+template<typename T>
+_vec2<T> operator*(T scalar, const _vec2<T>& vec) {
+    return _vec2<T>(scalar * vec.x,
+                    scalar * vec.y );
+}
+template<typename T>
+_vec2<T> operator/(T scalar, const _vec2<T>& vec) {
+    return _vec2<T>(scalar / vec.x,
+                    scalar / vec.y );
+}
+
+template<typename T>
+_vec3<T> operator+(T scalar, const _vec3<T>& vec) {
+    return _vec3<T>(scalar + vec.x,
+                    scalar + vec.y,
+                    scalar + vec.z );
+}
+template<typename T>
+_vec3<T> operator-(T scalar, const _vec3<T>& vec) {
+    return _vec3<T>(scalar - vec.x,
+                    scalar - vec.y,
+                    scalar - vec.z );
+}
+template<typename T>
+_vec3<T> operator*(T scalar, const _vec3<T>& vec) {
+    return _vec3<T>(scalar * vec.x,
+                    scalar * vec.y,
+                    scalar * vec.z );
+}
+template<typename T>
+_vec3<T> operator/(T scalar, const _vec3<T>& vec) {
+    return _vec3<T>(scalar / vec.x,
+                    scalar / vec.y,
+                    scalar / vec.z );
+}
+
+template<typename T>
+_vec4<T> operator+(T scalar, const _vec4<T>& vec) {
+    return _vec4<T>(scalar + vec.x,
+                    scalar + vec.y,
+                    scalar + vec.z,
+                    scalar + vec.w );
+}
+template<typename T>
+_vec4<T> operator-(T scalar, const _vec4<T>& vec) {
+    return _vec4<T>(scalar - vec.x,
+                    scalar - vec.y,
+                    scalar - vec.z,
+                    scalar - vec.w );
+}
+template<typename T>
+_vec4<T> operator*(T scalar, const _vec4<T>& vec) {
+    return _vec4<T>(scalar * vec.x,
+                    scalar * vec.y,
+                    scalar * vec.z,
+                    scalar * vec.w );
+}
+template<typename T>
+_vec4<T> operator/(T scalar, const _vec4<T>& vec) {
+    return _vec4<T>(scalar / vec.x,
+                    scalar / vec.y,
+                    scalar / vec.z,
+                    scalar / vec.w );
+}
+
 //debug
-template<typename U>
-std::ostream& operator<<(std::ostream& os, const _vec2<U>& vec)  {
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const _vec2<T>& vec)  {
     os << vec.x << ", " << vec.y;
     return os;
 }
 
-template<typename U>
-std::ostream& operator<<(std::ostream& os, const _vec3<U>& vec)  {
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const _vec3<T>& vec)  {
     os << vec.x << ", " << vec.y << ", " << vec.z;
     return os;
 }
 
-template<typename U>
-std::ostream& operator<<(std::ostream& os, const _vec4<U>& vec)  {
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const _vec4<T>& vec)  {
     os << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w;
     return os;
 }
 
 //      global defines
-template<typename U>
-float dot(const _vec2<U>& a, const _vec2<U>& b) { 
+template<typename T>
+float dot(const _vec2<T>& a, const _vec2<T>& b) { 
 	return (a.x * b.x) + (a.y * b.y);
 }
-template<typename U>
-float dot(const _vec3<U>& a, const _vec3<U>& b) { 
+template<typename T>
+float dot(const _vec3<T>& a, const _vec3<T>& b) { 
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
-template<typename U>
-float dot(const _vec4<U>& a, const _vec4<U>& b) { 
+template<typename T>
+float dot(const _vec4<T>& a, const _vec4<T>& b) { 
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w);
 }
 
-template<typename U>
-_vec3<U> cross(const _vec3<U>& a, const _vec3<U>& b) { 
-	return _vec3<U>(a.y*b.z - a.z*b.y,
+template<typename T>
+_vec3<T> cross(const _vec3<T>& a, const _vec3<T>& b) { 
+	return _vec3<T>(a.y*b.z - a.z*b.y,
 					a.z*b.x - a.x*b.z,
 					a.x*b.y - a.y*b.x);
 }
 
-template<typename U>
-_vec3<U> rotate(const _vec3<U> vector, const _vec3<U>& axis, float angle) {
-	return _vec3<U> (vector * cos(angle) + (axis.cross(vector)) * sin(angle) + axis * (axis.dot(vector)) * (1 - cos(angle)));
+template<typename T>
+_vec2<T> normalize(const _vec2<T>& vec) { 
+    return vec / vec.length(); 
 }
-template<typename U>
-_vec3<U> rotate(const _vec3<U> vector, const _vec4<U>& axisAngle) {
-	_vec3<U> axis(axisAngle.x, axisAngle.y, axisAngle.z);
-	return _vec3<U> (vector * cos(axisAngle.x) + cross(axis, vector) * sin(axisAngle.w) + axis * dot(axis, vector) * (1 - cos(axisAngle.w)));
+
+template<typename T>
+_vec3<T> normalize(const _vec3<T>& vec) { 
+    return vec / vec.length(); 
+}
+
+template<typename T>
+_vec4<T> normalize(const _vec4<T>& vec) { 
+    return vec / vec.length(); 
+}
+
+template<typename T>
+_vec3<T> rotate(const _vec3<T> vector, const _vec3<T>& axis, float angle) {
+	return _vec3<T> (vector * cos(angle) + (axis.cross(vector)) * sin(angle) + axis * (axis.dot(vector)) * (1 - cos(angle)));
+}
+template<typename T>
+_vec3<T> rotate(const _vec3<T> vector, const _vec4<T>& axisAngle) {
+	_vec3<T> axis(axisAngle.x, axisAngle.y, axisAngle.z);
+	return _vec3<T> (vector * cos(axisAngle.x) + cross(axis, vector) * sin(axisAngle.w) + axis * dot(axis, vector) * (1 - cos(axisAngle.w)));
 }
 
 }	//namespace vbp
