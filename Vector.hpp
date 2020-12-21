@@ -71,7 +71,6 @@ struct _vec2 {
     //type-cast overload
     template<typename U>
     operator _vec2<U>()  {
-        std::cout << "casted type!" << std::endl;
         return _vec2<U> (x, y);
     }
 
@@ -266,7 +265,6 @@ struct _vec3 {
     //type-cast overload
     template<typename U>
     operator _vec3<U>()  {
-        std::cout << "casted type!" << std::endl;
         return _vec3<U> (x, y, z);
     }
 
@@ -317,7 +315,6 @@ struct _vec3 {
     }
     
     _vec3<T> operator*=(T scalar) {
-        std::cout << "is fundamental: "<<std::is_fundamental<T>::value << std::endl;
         this->x *= scalar;
         this->y *= scalar;
 		this->z *= scalar;
@@ -461,7 +458,6 @@ struct _vec4 {
     //type-cast overload
     template<typename U>
     operator _vec4<U>()  {
-        std::cout << "casted type!" << std::endl;
         return _vec4<U> (x, y, z, w);
     }
 
@@ -782,5 +778,7 @@ _vec3<T> rotate(const _vec3<T> vector, const _vec4<T>& axisAngle) {
 	_vec3<T> axis(axisAngle.x, axisAngle.y, axisAngle.z);
 	return _vec3<T> (vector * cos(axisAngle.x) + cross(axis, vector) * sin(axisAngle.w) + axis * dot(axis, vector) * (1 - cos(axisAngle.w)));
 }
+
+//
 
 }	//namespace vbp
