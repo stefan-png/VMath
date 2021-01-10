@@ -51,7 +51,6 @@ namespace vmath {
 
 		template<typename U>
 		operator _mat4<U>()  {
-			std::cout << "casted type!" << std::endl;
 			return _mat4<U> (m);
 		}
 
