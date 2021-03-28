@@ -1,9 +1,9 @@
 # VMath
-My own lighter, more intuitive glm.
+vectors and matrices
 
 namespace vmath
 
-These headers consist of defenitions of templated 2D, 3D and 4D vectors as well as a 4x4 matrix. They are made to be easily used along with Vulkan, hence the name VMath.
+These headers consist of defenitions of templated 2D, 3D and 4D vectors as well as a 4x4 matrix.
 
 Vector functionality:
   * dot product
@@ -20,7 +20,7 @@ Matrix functionality:
   
 Vector file has every arithmetic operator overloaded (const and non-const).
 Vector file also overloads type cast operator(T), stream insertion operator<< and component acces operator[].
-You can do arithmetic on vectors with other vectors or scalars. Matrix file is not as fleshed out and is missing some functionality. They are not a priority right now though.
+You can do arithmetic on vectors with other vectors or scalars.
   
   
 When using these matrices in the vertex shader, simply multiply together all 3 matrices in the order that is described by the name. ie:

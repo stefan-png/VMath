@@ -54,6 +54,11 @@ namespace vmath {
 			return _mat4<U> (m);
 		}
 
+		template<typename U>
+		operator _mat4<U>() const {
+			return _mat4<U> (m);
+		}
+
 		//multiplication
 		_mat4<T> operator*=(const _mat4<T>& other) {
 			this->m[0] = this->m[0]*other[0] + this->m[4]*other[1] + this->m[8]*other[2] + this->m[12]*other[3];
