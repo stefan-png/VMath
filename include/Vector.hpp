@@ -3,7 +3,6 @@
 #pragma once
 #include <iostream>
 #include <cmath>
-#include <type_traits>  //for std::is_fundamental
 
 namespace vmath {
 
