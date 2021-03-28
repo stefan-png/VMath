@@ -74,6 +74,11 @@ struct _vec2 {
         return _vec2<U> (x, y);
     }
 
+    template<typename U>
+    operator _vec2<U>() const {
+        return _vec2<U> (x, y);
+    }
+
     //component access
     T& operator[](uint32_t i) {
         switch(i) {
@@ -268,6 +273,11 @@ struct _vec3 {
         return _vec3<U> (x, y, z);
     }
 
+    template<typename U>
+    operator _vec3<U>() const {
+        return _vec3<U> (x, y, z);
+    }
+
     //component access
     T& operator[](uint32_t i) {
         switch(i) {
@@ -458,6 +468,11 @@ struct _vec4 {
     //type-cast overload
     template<typename U>
     operator _vec4<U>()  {
+        return _vec4<U> (x, y, z, w);
+    }
+
+    template<typename U>
+    operator _vec4<U>() const {
         return _vec4<U> (x, y, z, w);
     }
 
